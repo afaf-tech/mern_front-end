@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Fade from "react-reveal/Fade";
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 
 import Header from "elements/parts/Header";
 import Button from "elements/Button";
@@ -14,35 +14,33 @@ import Stepper, {
 import BookingInformation from "elements/parts/Checkout/BookingInformation";
 import Payment from "elements/parts/Checkout/Payment";
 import Completed from "elements/parts/Checkout/Completed";
-import ItemDetails from "json/itemDetails.json";
 
-// import { submitBooking } from "store/actions/checkout";
+import { submitBooking } from "store/actions/checkout";
 
-export default class Checkout extends Component {
-    state = {
-        data: {
-            firstName: "",
-            lastName: "",
-            email: "",
-            phone: "",
-            proofPayment: "",
-            bankName: "",
-            bankHolder: "",
-        },
-    };
-    
-    onChange = (event) => {
-        this.setState({
-            data: {
-                ...this.state.data,
-                [event.target.name]: event.target.value,
-            },
-        });
-    };
-    
-    componentDidMount() {
-        console.log(ItemDetails);
-        window.scroll(0, 0);
+class Checkout extends Component {
+  state = {
+    data: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      proofPayment: "",
+      bankName: "",
+      bankHolder: "",
+    },
+  };
+
+  onChange = (event) => {
+    this.setState({
+      data: {
+        ...this.state.data,
+        [event.target.name]: event.target.value,
+      },
+    });
+  };
+
+  componentDidMount() {
+    window.scroll(0, 0);
     document.title = "Staycation | Checkout";
   }
 
@@ -55,8 +53,7 @@ export default class Checkout extends Component {
     payload.append("lastName", data.lastName);
     payload.append("email", data.email);
     payload.append("phoneNumber", data.phone);
-    // payload.append("idItem", checkout._id);
-    payload.append("idItem", "fsdafsdf324");
+    payload.append("idItem", checkout._id);
     payload.append("duration", checkout.duration);
     payload.append("bookingStartDate", checkout.date.startDate);
     payload.append("bookingEndDate", checkout.date.endDate);
@@ -72,11 +69,8 @@ export default class Checkout extends Component {
 
   render() {
     const { data } = this.state;
-    // const { checkout, page } = this.props;
-    const checkout = {
-        duration : 3
-    };
-    // console.log(page, data);
+    const { checkout, page } = this.props;
+    console.log(page, data);
     if (!checkout)
       return (
         <div className="container">
@@ -109,7 +103,7 @@ export default class Checkout extends Component {
           <BookingInformation
             data={data}
             checkout={checkout}
-            ItemDetails={ItemDetails._id}
+            ItemDetails={page[checkout._id]}
             onChange={this.onChange}
           />
         ),
@@ -120,7 +114,7 @@ export default class Checkout extends Component {
         content: (
           <Payment
             data={data}
-            ItemDetails={ItemDetails._id}
+            ItemDetails={page[checkout._id]}
             checkout={checkout}
             onChange={this.onChange}
           />
@@ -137,7 +131,7 @@ export default class Checkout extends Component {
       <>
         <Header isCentered />
 
-        <Stepper steps={steps} initialStep="bookingInformation">
+        <Stepper steps={steps} initialStep="payment">
           {(prevStep, nextStep, CurrentStep, steps) => (
             <>
               <Numbering
@@ -174,7 +168,7 @@ export default class Checkout extends Component {
                     type="link"
                     isBlock
                     isLight
-                    href={`/properties/${ItemDetails._id}`}
+                    href={`/properties/${checkout._id}`}
                   >
                     Cancel
                   </Button>
@@ -233,9 +227,9 @@ export default class Checkout extends Component {
   }
 }
 
-// const mapStateToProps = (state) => ({
-//   checkout: state.checkout,
-//   page: state.page,
-// });
+const mapStateToProps = (state) => ({
+  checkout: state.checkout,
+  page: state.page,
+});
 
-// export default connect(mapStateToProps, { submitBooking })(Checkout);
+export default connect(mapStateToProps, { submitBooking })(Checkout);

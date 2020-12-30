@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Fade from "react-reveal/Fade";
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 
 import Header from "elements/parts/Header";
 import PageDetailTitle from "elements/parts/PageDetailTitle";
@@ -14,10 +14,10 @@ import Footer from "elements/parts/Footer";
 
 import itemDetails from 'json/itemDetails.json'
 
-// import { checkoutBooking } from "store/actions/checkout";
+import { checkoutBooking } from "store/actions/checkout";
 // import { fetchPage } from "store/actions/page";
 
-export default class DetailsPage extends Component {
+ class DetailsPage extends Component {
   componentDidMount(){
     window.title ="Details Page";
     window.scrollTo(0,0)
@@ -70,6 +70,6 @@ const mapStateToProps = (state) => ({
   page: state.page,
 });
 
-// export default connect(mapStateToProps, { checkoutBooking, fetchPage })(
-//   DetailsPage
-// );
+export default connect(mapStateToProps, { checkoutBooking /* ,fetchPage */ })(
+  DetailsPage
+);
