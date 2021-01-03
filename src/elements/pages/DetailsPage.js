@@ -18,15 +18,24 @@ import { checkoutBooking } from "store/actions/checkout";
 // import { fetchPage } from "store/actions/page";
 
  class DetailsPage extends Component {
-  componentDidMount(){
-    window.title ="Details Page";
-    window.scrollTo(0,0)
+  componentDidMount() {
+    window.scrollTo(0, 0);
+
+    if (!this.props.page[this.props.match.params.id])
+      this.props
+        .fetchPage(
+          `/detail-page/${this.props.match.params.id}`,
+          this.props.match.params.id
+        )
+        .then((response) => {
+          document.title = `Staycation | ${response.title}`;
+        });
   }
 
   render() {
-    // const { page, match } = this.props;
+    const { page, match } = this.props;
 
-    // if (!page[match.params.id]) return null;
+    if (!page[match.params.id]) return null;
 
     const breadcrumb = [
       { pageTitle: "Home", pageHref: "" },
@@ -56,8 +65,8 @@ import { checkoutBooking } from "store/actions/checkout";
           </div>
         </section>
 
-        {/* <Activities data={page[match.params.id].activityId} /> */}
-        <Categories data={itemDetails.categories} />
+        <Activities data={page[match.params.id].activityId} />
+        {/* <Categories data={itemDetails.categories} /> */}
         <Testimony data={itemDetails.testimonial} />
 
         <Footer />
@@ -70,6 +79,6 @@ const mapStateToProps = (state) => ({
   page: state.page,
 });
 
-export default connect(mapStateToProps, { checkoutBooking /* ,fetchPage */ })(
+export default connect(mapStateToProps, { checkoutBooking ,fetchPage })(
   DetailsPage
 );
